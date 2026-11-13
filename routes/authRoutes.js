@@ -49,4 +49,17 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+// @route   GET /api/auth/users
+// @desc    Get all users (For Admin Dashboard)
+router.get('/users', async (req, res, next) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true } // Don't send passwords!
+    });
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

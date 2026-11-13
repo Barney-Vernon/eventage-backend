@@ -17,7 +17,21 @@ async function main() {
   });
   console.log('✅ Admin user created:', admin.email);
 
-  // 2. Create a Vendor User
+    // 2. Create a Staff User
+  const staffPassword = await bcrypt.hash('staff123', 10);
+  await prisma.user.upsert({
+    where: { email: 'staff@eventage.com' },
+    update: {},
+    create: {
+      name: 'Event Manager Jane',
+      email: 'staff@eventage.com',
+      password: staffPassword,
+      role: 'STAFF',
+    },
+  });
+  console.log('✅ Staff user created: staff@eventage.com');
+
+  // 3. Create a Vendor User
   const vendorPassword = await bcrypt.hash('vendor123', 10);
   await prisma.user.upsert({
     where: { email: 'vendor@soundsolutions.com' },
@@ -31,7 +45,7 @@ async function main() {
   });
   console.log('✅ Vendor user created: vendor@soundsolutions.com');
 
-  // 3. Create a Client User
+  // 4. Create a Client User
   const clientPassword = await bcrypt.hash('client123', 10);
   await prisma.user.upsert({
     where: { email: 'client@xyzltd.com' },
@@ -45,11 +59,11 @@ async function main() {
   });
   console.log('✅ Client user created: client@xyzltd.com');
 
-  // 4. Clear existing resources to prevent duplicates
+  // 5. Clear existing resources to prevent duplicates
   await prisma.resource.deleteMany({}); 
   console.log('🧹 Cleared old resources');
 
-  // 5. Create fresh Sample Resources
+  // 6. Create fresh Sample Resources
   const resources = [
     // Tents & Seating
     { name: 'Tent 20x20', totalQty: 10, availableQty: 10 },
